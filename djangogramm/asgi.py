@@ -11,6 +11,6 @@ import os
 
 from django.core.asgi import get_asgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'Task_12_Barebones_DjangoGramm.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'djangogramm.settings')
 
 application = get_asgi_application()
