@@ -15,6 +15,11 @@ class Post(models.Model):
     tags = models.ManyToManyField(Tag, blank=True, related_name="posts")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    likers = models.ManyToManyField(
+        settings.AUTH_USER_MODEL,
+        through="Like",
+        related_name="liked_posts"
+    )
 
     class Meta:
         ordering = ["-created_at"]
@@ -45,8 +50,8 @@ class Image(models.Model):
                 img.save(self.image.path)
 
 class Like(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="likes")
-    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="likes")
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
