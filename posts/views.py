@@ -1,8 +1,14 @@
 from django.http import HttpResponse
+from django.shortcuts import render
+from .models import Post
 
 
-def feed_view(request):
-    return HttpResponse("This is the main post feed.")
+def home_view(request):
+    posts = Post.objects.all().order_by("-created_at")
+    context = {
+        "posts": posts
+    }
+    return render(request, "posts/home.html", context)
 
 def create_post_view(request):
     return HttpResponse("This is the page to create a new post.")

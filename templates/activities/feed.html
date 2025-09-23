@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        <h1 class="mb-4">Your News Feed</h1>
+        {% for activity in activities %}
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <a href="{% url 'users:profile' activity.user.username %}">{{ activity.user.username }}</a>
+                        <small class="text-muted">{{ activity.created_at|timesince }} ago</small>
+                    </h5>
+                    {% if activity.activity_type == 'POST' %}
+                        {% with post=activity.content_object %}
+                            <p>... created a new post:</p>
+                            <div class="card">
+                                {% if post.images.first %}
+                                    <img src="{{ post.images.first.image.url }}" class="card-img-top" alt="Post image">
+                                {% endif %}
+                                <div class="card-body">
+                                    {% if post.tags.all %}
+                                      <div class="mb-2">
+                                        {% for tag in post.tags.all %}
+                                          <span class="badge bg-secondary me-1">{{ tag.name }}</span>
+                                        {% endfor %}
+                                      </div>
+                                    {% endif %}
+                                    <p class="card-text">{{ post.caption }}</p>
+                                </div>
+                            </div>
+                        {% endwith %}
+                    {% elif activity.activity_type == 'LIKE' %}
+                        <p>... liked a post by
+                        <a href="{% url 'users:profile' activity.content_object.post.author.username %}">{{ activity.content_object.post.author.username }}</a></p>
+                    {% elif activity.activity_type == 'FOLLOW' %}
+                        <p>... started following
+                        <a href="{% url 'users:profile' activity.content_object.following_user.username %}">{{ activity.content_object.following_user.username }}</a></p>
+                    {% endif %}
+                </div>
+            </div>
+        {% empty %}
+            <p>Your feed is empty. Find some users to follow!</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

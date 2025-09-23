@@ -1,52 +1,45 @@
 import io
 import pytest
-from django.contrib.auth import get_user_model
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.db import IntegrityError, transaction
+from django.urls import reverse
 from PIL import Image as PilImage
 from .models import Image, Like, Post, Tag
 
 
-User = get_user_model()
-
-@pytest.fixture
-def test_user(db):
-    """A fixture to create a user for tests"""
-    return User.objects.create_user(username='testuser', password='password')
-
-@pytest.fixture
-def test_post(test_user):
-    """A fixture to create a post"""
-    return Post.objects.create(author=test_user, caption="A test caption.")
-
 @pytest.mark.django_db
 class TestPostModels:
-    def test_post_creation(self, test_user):
-        """Tests creating a Post and its relationship to the author"""
-        post = Post.objects.create(author=test_user, caption="This is a test.")
-        assert Post.objects.count() == 1
-        assert post.author == test_user
-        assert str(post) == f"Post {post.id} by {test_user.username}"
+    def test_tag_creation(self):
+        """Tests that a Tag can be created and its __str__ method works"""
+        tag = Tag.objects.create(name="travel")
+        assert Tag.objects.count() == 1
+        assert str(tag) == "travel"
 
-    def test_like_logic(self, test_user, test_post):
-        """
-        Tests the business logic of the Like model:
-        1. A user can like a post.
-        2. A user CANNOT like the same post twice.
-        """
-        Like.objects.create(user=test_user, post=test_post)
-        assert test_post.likes.count() == 1
-        assert Like.objects.count() == 1
+    def test_post_and_tag_relationship(self, post):
+        """Tests the ManyToManyField relationship between Post and Tag"""
+        tag1 = Tag.objects.create(name="photography")
+        tag2 = Tag.objects.create(name="testing")
+        post.tags.add(tag1, tag2)
+        assert post.tags.count() == 2
+        assert tag1.posts.first() == post
+
+    def test_post_creation(self, user1):
+        """Tests creating a Post and its relationship to the author"""
+        post = Post.objects.create(author=user1, caption="This is a test.")
+        assert post.author == user1
+        assert str(post) == f"Post {post.id} by {user1.username}"
+
+    def test_like_logic(self, user1, user2, post):
+        """Tests the business logic of the Like model"""
+        post.likers.add(user2)
+        assert post.likers.count() == 1
         with pytest.raises(IntegrityError):
             with transaction.atomic():
-                Like.objects.create(user=test_user, post=test_post)
-        assert test_post.likes.count() == 1
+                Like.objects.create(user=user2, post=post)
+        assert post.likers.count() == 1
 
-    def test_image_resizing_on_save(self, test_post):
-        """
-        Tests that the Image model's custom save() method correctly resizes
-        a large uploaded image.
-        """
+    def test_image_resizing_on_save(self, post):
+        """Tests that the Image model's save() method resizes a large image"""
         large_image_buffer = io.BytesIO()
         large_image = PilImage.new("RGB", (1200, 1000), "white")
         large_image.save(large_image_buffer, format="JPEG")
@@ -56,25 +49,22 @@ class TestPostModels:
             content=large_image_buffer.read(),
             content_type="image/jpeg"
         )
-        image_instance = Image.objects.create(post=test_post, image=image_file)
-        saved_image_path = image_instance.image.path
-        with PilImage.open(saved_image_path) as resized_img:
+        image_instance = Image.objects.create(post=post, image=image_file)
+        with PilImage.open(image_instance.image.path) as resized_img:
             width, height = resized_img.size
-        assert width <= 800
-        assert height <= 800
+        assert width <= 800 and height <= 800
 
-    def test_tag_creation(self):
-        """Tests that a Tag can be created and its __str__ method works"""
-        tag = Tag.objects.create(name="test")
-        assert Tag.objects.count() == 1
-        assert tag.name == "test"
-        assert str(tag) == "test"
+@pytest.mark.django_db
+class TestHomepageView:
+    def test_homepage_loads_for_anonymous_user(self, client):
+        """Tests that the homepage is public and loads successfully"""
+        url = reverse("home")
+        response = client.get(url)
+        assert response.status_code == 200
 
-    def test_post_and_tag_relationship(self, test_post):
-        """Tests the ManyToManyField relationship between Post and Tag"""
-        tag1 = Tag.objects.create(name="test1")
-        tag2 = Tag.objects.create(name="test2")
-        test_post.tags.add(tag1, tag2)
-        assert test_post.tags.count() == 2
-        assert tag1.posts.count() == 1
-        assert tag1.posts.first() == test_post
+    def test_homepage_shows_posts(self, client, post):
+        """Tests that posts appear on the homepage"""
+        url = reverse("home")
+        response = client.get(url)
+        assert response.status_code == 200
+        assert post.caption in str(response.content)
