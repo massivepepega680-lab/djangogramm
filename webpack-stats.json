@@ -1,0 +1,22 @@
+{
+  "status": "done",
+  "assets": {
+    "main-ec2a276118a858bf00b6.css": {
+      "name": "main-ec2a276118a858bf00b6.css",
+      "path": "C:\\Users\\murki\\PycharmProjects\\Task_14_DjangoGramm_Pretty_View\\static\\webpack_bundles\\main-ec2a276118a858bf00b6.css",
+      "publicPath": "/static/webpack_bundles/main-ec2a276118a858bf00b6.css"
+    },
+    "main-ec2a276118a858bf00b6.js": {
+      "name": "main-ec2a276118a858bf00b6.js",
+      "path": "C:\\Users\\murki\\PycharmProjects\\Task_14_DjangoGramm_Pretty_View\\static\\webpack_bundles\\main-ec2a276118a858bf00b6.js",
+      "publicPath": "/static/webpack_bundles/main-ec2a276118a858bf00b6.js"
+    }
+  },
+  "chunks": {
+    "main": [
+      "main-ec2a276118a858bf00b6.css",
+      "main-ec2a276118a858bf00b6.js"
+    ]
+  },
+  "publicPath": "/static/webpack_bundles/"
+}

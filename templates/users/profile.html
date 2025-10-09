@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <!-- User profile header -->
+    <div class="row mb-4">
+        <!-- Avatar section -->
+        <div class="col-md-3 text-center">
+            {% if profile_user.avatar %}
+                <img src="{{ profile_user.avatar.url }}" alt="{{ profile_user.username }}'s avatar" class="img-fluid rounded-circle" style="width: 150px; height: 150px; object-fit: cover;">
+            {% else %}
+                <div class="bg-secondary rounded-circle d-flex align-items-center justify-content-center text-white" style="width: 150px; height: 150px;">
+                    <span style="font-size: 4rem;">{{ profile_user.username.0|upper }}</span>
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- User information section -->
+        <div class="col-md-9">
+            <!-- Username and action buttons -->
+            <div class="d-flex align-items-center mb-3">
+                <h2 class="mr-3 mb-0">{{ profile_user.username }}</h2>
+                {% if request.user == profile_user %}
+                    <a href="{% url 'users:profile_edit' %}" class="btn btn-sm btn-outline-secondary">Edit Profile</a>
+                {% elif request.user.is_authenticated %}
+                    <div id="vue-app-follow-button" class="vue-app">
+                        {% csrf_token %}
+                        <follow-button
+                            profile-username="{{ profile_user.username }}"
+                            :is-initially-following="{{ is_following|yesno:'true,false' }}"
+                            v-on:update-follower-count="updateFollowerCount"
+                        ></follow-button>
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- User stats (posts, followers, following) -->
+            <div class="d-flex mb-3">
+                <div class="mr-4">
+                    <strong>{{ profile_user.posts.count }}</strong> posts
+                </div>
+                <div class="mr-4">
+                    <strong id="follower-count">{{ profile_user.followers.count }}</strong> followers
+                </div>
+                <div>
+                    <strong>{{ profile_user.following.count }}</strong> following
+                </div>
+            </div>
+
+            <!-- Full name and bio -->
+            <p class="mt-3 font-weight-bold">{{ profile_user.get_full_name }}</p>
+            <p>{{ profile_user.bio|linebreaksbr }}</p>
+        </div>
+    </div>
+
+    <hr>
+
+    <!-- User's post gallery -->
+    <h3>Posts</h3>
+    <div class="row mt-4">
+        {% for post in profile_user.posts.all %}
+            <div class="col-md-4 mb-4">
+                <a href="{% url 'posts:post_details' post.id %}" class="text-decoration-none">
+                    <div class="card">
+                        {% if post.images.first %}
+                            <img src="{{ post.images.first.image.url }}" class="card-img-top" alt="Post by {{ post.author.username }}" style="aspect-ratio: 1 / 1; object-fit: cover;">
+                        {% endif %}
+                    </div>
+                </a>
+            </div>
+        {% empty %}
+            <p class="text-muted">This user hasn't posted anything yet.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

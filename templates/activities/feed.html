@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        <h1 class="mb-4">Your News Feed</h1>
+        {% for activity in activities %}
+            {% if activity.content_object %}
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <a href="{% url 'users:profile' activity.user.username %}">{{ activity.user.username }}</a>
+                            <small class="text-muted">{{ activity.created_at|timesince }} ago</small>
+                        </h5>
+                        {% if activity.activity_type == 'POST' %}
+                            {% with post=activity.content_object %}
+                                <p>... created a new post:</p>
+                                <div class="card">
+                                    {% if post.images.first %}
+                                        <img src="{{ post.images.first.image.url }}" class="card-img-top" alt="Post image">
+                                    {% endif %}
+                                    <div class="card-body">
+                                        <p class="card-text">{{ post.caption }}</p>
+                                    </div>
+                                </div>
+                            {% endwith %}
+                        {% elif activity.activity_type == 'LIKE' %}
+                            {% if activity.content_object.post and activity.content_object.post.author %}
+                                <p>... liked a post by
+                                <a href="{% url 'users:profile' activity.content_object.post.author.username %}">{{ activity.content_object.post.author.username }}</a></p>
+                            {% endif %}
+                        {% elif activity.activity_type == 'FOLLOW' %}
+                            {% if activity.content_object.following_user %}
+                                <p>... started following
+                                <a href="{% url 'users:profile' activity.content_object.following_user.username %}">{{ activity.content_object.following_user.username }}</a></p>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                </div>
+            {% endif %}
+        {% empty %}
+            <p>Your feed is empty. Find some users to follow!</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

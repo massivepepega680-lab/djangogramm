@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h2>Create a New Post</h2>
+            </div>
+            <div class="card-body">
+                <!-- Main form with multipart encoding for file uploads -->
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+
+                    <!-- Image upload field -->
+                    <div class="form-group mb-3">
+                        <label for="{{ image_form.images.id_for_label }}"><strong>Images</strong></label>
+                        {{ image_form.images }}
+                        {% if image_form.images.errors %}
+                            <div class="alert alert-danger mt-2">
+                                {{ image_form.images.errors }}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Caption input field -->
+                    <div class="form-group mb-3">
+                        <label for="{{ post_form.caption.id_for_label }}"><strong>Caption</strong></label>
+                        {{ post_form.caption }}
+                    </div>
+
+                    <!-- Tags input field -->
+                    <div class="form-group mb-3">
+                        <label for="{{ post_form.tags.id_for_label }}"><strong>Tags</strong></label>
+                        {{ post_form.tags }}
+                        <small class="form-text text-muted">{{ post_form.tags.help_text }}</small>
+                    </div>
+
+                    <!-- Action buttons -->
+                    <button type="submit" class="btn btn-primary">Create Post</button>
+                    <a href="{% url 'home' %}" class="btn btn-secondary">Cancel</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,157 @@
+// THEME COLORS
+$universal-link-color: #4cb5f9;
+
+// Light Theme (Default)
+$light-primary-bg: #ffffff;
+$light-secondary-bg: #fafafa;
+$light-primary-text: #262626;
+$light-secondary-text: #8e8e8e;
+$light-border: #dbdbdb;
+$light-primary-btn: #0095f6;
+$light-secondary-btn: #efefef;
+$light-username-text: #555555;
+
+// Dark Theme
+$dark-primary-bg: #1e1e1e;
+$dark-secondary-bg: #121212;
+$dark-primary-text: #e0e0e0;
+$dark-secondary-text: #a8a8a8;
+$dark-border: #363636;
+$dark-primary-btn: #{$universal-link-color};
+$dark-secondary-btn: #363636;
+$dark-username-text: #c0c0c0;
+
+// THEME COLORS MAPPING
+:root {
+  --primary-bg-color: #{$light-primary-bg};
+  --secondary-bg-color: #{$light-secondary-bg};
+  --primary-text-color: #{$light-primary-text};
+  --secondary-text-color: #{$light-secondary-text};
+  --border-color: #{$light-border};
+  --link-color: #{$universal-link-color};
+  --primary-btn-bg: #{$light-primary-btn};
+  --secondary-btn-bg: #{$light-secondary-btn};
+  --primary-btn-text: #ffffff;
+  --username-text-color: #{$light-username-text};
+}
+
+body.dark-mode {
+  --primary-bg-color: #{$dark-primary-bg};
+  --secondary-bg-color: #{$dark-secondary-bg};
+  --primary-text-color: #{$dark-primary-text};
+  --secondary-text-color: #{$dark-secondary-text};
+  --border-color: #{$dark-border};
+  --link-color: #{$universal-link-color};
+  --primary-btn-bg: #{$dark-primary-btn};
+  --secondary-btn-bg: #{$dark-secondary-btn};
+  --primary-btn-text: #121212;
+  --username-text-color: #{$dark-username-text};
+}
+
+// BOOTSTRAP IMPORTS AND OVERRIDES
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+
+$body-bg: var(--secondary-bg-color);
+$body-color: var(--primary-text-color);
+$link-color: var(--link-color);
+$card-bg: var(--primary-bg-color);
+$card-border-color: var(--border-color);
+$card-cap-bg: var(--primary-bg-color);
+$navbar-light-bg: var(--primary-bg-color);
+$navbar-light-border-color: var(--border-color);
+$navbar-light-color: var(--secondary-text-color);
+$navbar-light-hover-color: var(--primary-text-color);
+$navbar-light-active-color: var(--primary-text-color);
+$navbar-light-brand-color: var(--primary-text-color);
+$alert-bg-level: 0;
+$alert-border-level: 0;
+$alert-color-level: 0;
+
+@import "~bootstrap/scss/bootstrap";
+
+// CUSTOM STYLES
+body {
+  background-color: var(--secondary-bg-color);
+  color: var(--primary-text-color);
+  a {
+    color: var(--link-color);
+    &:hover {
+        text-decoration: underline;
+    }
+  }
+}
+
+// NAVBAR OVERRIDES
+.navbar.navbar-light {
+    background-color: var(--primary-bg-color) !important;
+    border-color: var(--border-color) !important;
+
+    .navbar-brand, .nav-link {
+        color: var(--primary-text-color) !important;
+    }
+
+    .custom-switch .custom-control-label {
+        color: var(--primary-text-color) !important;
+    }
+}
+
+.card, .modal-content {
+  background-color: var(--primary-bg-color) !important;
+  border-color: var(--border-color) !important;
+  color: var(--primary-text-color) !important;
+}
+
+.card-header, .card-footer {
+  background-color: var(--primary-bg-color) !important;
+  border-color: var(--border-color) !important;
+}
+
+.alert.alert-light {
+    background-color: var(--secondary-bg-color);
+    color: var(--primary-text-color);
+    border: 1px solid var(--border-color) !important;
+    p {
+        color: var(--secondary-text-color);
+    }
+}
+
+.alert-success {
+    background-color: var(--success-bg-color) !important;
+    color: var(--success-text-color) !important;
+    border-color: var(--success-border-color) !important;
+}
+
+// Universal fix for the dismiss 'x' button in all alerts
+.alert .close {
+    color: var(--primary-text-color);
+    opacity: 0.7;
+    &:hover {
+        opacity: 1;
+    }
+}
+
+.card-header .d-flex > a.font-weight-bold,
+.card-body .card-text > a:first-child {
+    color: var(--username-text-color) !important;
+    font-weight: bold;
+    &:hover {
+        color: var(--primary-text-color) !important;
+        text-decoration: none;
+    }
+}
+
+.btn-primary {
+  background-color: var(--primary-btn-bg);
+  border-color: var(--primary-btn-bg);
+  color: var(--primary-btn-text) !important;
+}
+
+.btn-secondary {
+  background-color: var(--secondary-btn-bg);
+  border-color: var(--border-color);
+  color: var(--primary-text-color) !important;
+  &:hover {
+    background-color: var(--border-color);
+  }
+}
