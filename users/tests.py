@@ -1,6 +1,8 @@
 import io
 import json
+from unittest import mock
 import pytest
+from django.core import mail
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.db import IntegrityError, transaction
 from django.urls import reverse
@@ -137,3 +139,122 @@ class TestApiEndpoints:
         response = client.post(follow_url, **ajax_headers)
         assert response.status_code == 302
         assert "login" in response.url
+
+@pytest.mark.django_db
+class TestAuthenticationFlow:
+    def test_signup_and_activation_flow(self, client, valid_signup_data):
+        """Tests the full user journey: signup, email sending, activation,
+        and mandatory profile setup
+        """
+        signup_url = reverse("users:register")
+        response_post = client.post(signup_url, valid_signup_data)
+
+        if "form" in response_post.context and response_post.context["form"].errors:
+            pytest.fail(f"Signup form had errors: {response_post.context["form"].errors.as_json()}")
+
+        assert response_post.status_code == 302, "Form was valid but did not redirect."
+        assert response_post.url == reverse("users:activation_sent")
+
+        response_get = client.get(response_post.url)
+        assert response_get.status_code == 200
+        assert "users/activation_sent.html" in (t.name for t in response_get.templates)
+
+        user = User.objects.get(username=valid_signup_data["username"])
+        assert not user.is_active
+
+        assert len(mail.outbox) == 1
+        activation_email = mail.outbox[0]
+        assert "Activate Your DjangoGramm Account" in activation_email.subject
+
+        body = activation_email.body
+        activation_url = body.split("http://testserver")[1].strip()
+
+        response_activate = client.get(activation_url, follow=True)
+        assert response_activate.status_code == 200
+        assert "users/profile_setup.html" in (t.name for t in response_activate.templates)
+
+        user.refresh_from_db()
+        assert user.is_active
+        assert user.is_verified
+        assert "_auth_user_id" in client.session
+
+        profile_setup_url = reverse("users:profile_setup")
+        profile_data = {
+            "first_name": "New",
+            "last_name": "User",
+            "bio": "Just signed up!",
+        }
+        response_setup = client.post(profile_setup_url, profile_data, follow=True)
+        assert response_setup.status_code == 200
+        assert response_setup.request["PATH_INFO"] == reverse(
+            "users:profile",
+            kwargs={"username": "newuser"}
+        )
+
+        user.refresh_from_db()
+        assert user.first_name == "New"
+
+    def test_login_with_username_and_email(self, client, db):
+        """Tests that a user can log in with either their username or email"""
+        User.objects.create_user(
+            username="testlogin",
+            email="testlogin@example.com",
+            password="password123"
+        )
+        login_url = reverse("users:login")
+
+        login_data_username = {"username": "testlogin", "password": "password123"}
+        response = client.post(login_url, login_data_username, follow=True)
+        assert response.status_code == 200
+        assert "_auth_user_id" in client.session
+        client.logout()
+
+        login_data_email = {"username": "testlogin@example.com", "password": "password123"}
+        response = client.post(login_url, login_data_email, follow=True)
+        assert response.status_code == 200
+        assert "_auth_user_id" in client.session
+        client.logout()
+
+        login_data_wrong_pass = {"username": "testlogin", "password": "wrongpassword"}
+        response = client.post(reverse("users:login"), login_data_wrong_pass)
+        assert response.status_code == 200
+        assert "_auth_user_id" not in client.session
+        assert "alert-danger" in str(response.content)
+
+@pytest.mark.django_db
+class TestGoogleAuth:
+    @mock.patch("social_core.backends.base.BaseAuth.request")
+    def test_google_login_creates_verified_user(self, mock_request, client):
+        """Tests the full Google login pipeline by mocking the low-level request method"""
+        mock_request.return_value.json.side_effect = [
+            {
+                "access_token": "dummy-access-token",
+                "token_type": "Bearer",
+            },
+            {
+                "id": "12345",
+                "email": "googleuser@example.com",
+                "verified_email": True,
+                "name": "Google User",
+                "given_name": "Google",
+                "family_name": "User",
+            }
+        ]
+
+        session = client.session
+        session["google-oauth2_state"] = "a_random_state_string"
+        session.save()
+
+        complete_url = reverse("social:complete", args=["google-oauth2"])
+        response = client.get(
+            f"{complete_url}?code=dummy-code&state=a_random_state_string",
+            follow=True
+        )
+
+        assert response.status_code == 200
+        assert User.objects.filter(email="googleuser@example.com").exists()
+        new_user = User.objects.get(email="googleuser@example.com")
+        assert new_user.is_active
+        assert new_user.is_verified
+        assert new_user.first_name == "Google"
+        assert int(client.session["_auth_user_id"]) == new_user.id

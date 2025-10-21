@@ -71,7 +71,6 @@ class Command(BaseCommand):
         faker = Faker()
         users = []
         for i in range(num_users):
-            profile = faker.profile()
             user = User.objects.create_user(
                 username=faker.user_name() + str(i),
                 email=faker.email(),
@@ -80,6 +79,8 @@ class Command(BaseCommand):
             user.first_name = faker.first_name()
             user.last_name = faker.last_name()
             user.bio = faker.sentence(nb_words=15)
+            user.is_active = True
+            user.is_verified = True
             avatar_buffer = io.BytesIO()
             dummy_avatar = PilImage.new("RGB", (200, 200), color=faker.safe_color_name())
             dummy_avatar.save(avatar_buffer, format="JPEG")

@@ -10,6 +10,15 @@ $light-border: #dbdbdb;
 $light-primary-btn: #0095f6;
 $light-secondary-btn: #efefef;
 $light-username-text: #555555;
+$light-success-bg: #d4edda;
+$light-success-border: #c3e6cb;
+$light-success-text: #155724;
+$light-info-bg: #d1ecf1;
+$light-info-border: #bee5eb;
+$light-info-text: #0c5460;
+$light-danger-bg: #f8d7da;
+$light-danger-border: #f5c6cb;
+$light-danger-text: #721c24;
 
 // Dark Theme
 $dark-primary-bg: #1e1e1e;
@@ -20,6 +29,15 @@ $dark-border: #363636;
 $dark-primary-btn: #{$universal-link-color};
 $dark-secondary-btn: #363636;
 $dark-username-text: #c0c0c0;
+$dark-success-bg: #1e4620;
+$dark-success-border: #2a642d;
+$dark-success-text: #c8e6c9;
+$dark-info-bg: #1c3a40;
+$dark-info-border: #2c5a63;
+$dark-info-text: #bee5eb;
+$dark-danger-bg: #4a2023;
+$dark-danger-border: #6d2f34;
+$dark-danger-text: #f5c6cb;
 
 // THEME COLORS MAPPING
 :root {
@@ -33,6 +51,15 @@ $dark-username-text: #c0c0c0;
   --secondary-btn-bg: #{$light-secondary-btn};
   --primary-btn-text: #ffffff;
   --username-text-color: #{$light-username-text};
+  --success-bg-color: #{$light-success-bg};
+  --success-border-color: #{$light-success-border};
+  --success-text-color: #{$light-success-text};
+  --info-bg-color: #{$light-info-bg};
+  --info-border-color: #{$light-info-border};
+  --info-text-color: #{$light-info-text};
+  --danger-bg-color: #{$light-danger-bg};
+  --danger-border-color: #{$light-danger-border};
+  --danger-text-color: #{$light-danger-text};
 }
 
 body.dark-mode {
@@ -46,6 +73,15 @@ body.dark-mode {
   --secondary-btn-bg: #{$dark-secondary-btn};
   --primary-btn-text: #121212;
   --username-text-color: #{$dark-username-text};
+  --success-bg-color: #{$dark-success-bg};
+  --success-border-color: #{$dark-success-border};
+  --success-text-color: #{$dark-success-text};
+  --info-bg-color: #{$dark-info-bg};
+  --info-border-color: #{$dark-info-border};
+  --info-text-color: #{$dark-info-text};
+  --danger-bg-color: #{$dark-danger-bg};
+  --danger-border-color: #{$dark-danger-border};
+  --danger-text-color: #{$dark-danger-text};
 }
 
 // BOOTSTRAP IMPORTS AND OVERRIDES
@@ -120,6 +156,18 @@ body {
     background-color: var(--success-bg-color) !important;
     color: var(--success-text-color) !important;
     border-color: var(--success-border-color) !important;
+}
+
+.alert-info {
+    background-color: var(--info-bg-color) !important;
+    color: var(--info-text-color) !important;
+    border-color: var(--info-border-color) !important;
+}
+
+.alert-danger, .alert-error {
+    background-color: var(--danger-bg-color) !important;
+    color: var(--danger-text-color) !important;
+    border-color: var(--danger-border-color) !important;
 }
 
 // Universal fix for the dismiss 'x' button in all alerts

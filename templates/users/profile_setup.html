@@ -1,10 +1,67 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends "base.html" %}
 
-</body>
-</html>
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h2>Set Up Your Profile</h2>
+            </div>
+            <div class="card-body">
+                <p class="text-muted">Welcome to DjangoGramm! Please complete your profile to continue.</p>
+                <hr>
+
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+
+                    {% if form.non_field_errors %}
+                        <div class="alert alert-danger">
+                            {% for error in form.non_field_errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
+                    {# First Name (Required) #}
+                    <div class="form-group mb-3">
+                        <label for="{{ form.first_name.id_for_label }}"><strong>First Name <span class="text-danger">*</span></strong></label>
+                        {{ form.first_name }}
+                        {% if form.first_name.errors %}
+                            <div class="invalid-feedback d-block">{{ form.first_name.errors.as_text }}</div>
+                        {% endif %}
+                    </div>
+
+                    {# Last Name (Required) #}
+                    <div class="form-group mb-3">
+                        <label for="{{ form.last_name.id_for_label }}"><strong>Last Name <span class="text-danger">*</span></strong></label>
+                        {{ form.last_name }}
+                        {% if form.last_name.errors %}
+                            <div class="invalid-feedback d-block">{{ form.last_name.errors.as_text }}</div>
+                        {% endif %}
+                    </div>
+
+                    {# Bio (Optional) #}
+                    <div class="form-group mb-3">
+                        <label for="{{ form.bio.id_for_label }}">Bio (Optional)</label>
+                        {{ form.bio }}
+                        {% if form.bio.errors %}
+                            <div class="invalid-feedback d-block">{{ form.bio.errors.as_text }}</div>
+                        {% endif %}
+                    </div>
+
+                    {# Avatar (Optional) #}
+                    <div class="form-group mb-3">
+                        <label for="{{ form.avatar.id_for_label }}">Avatar (Optional)</label>
+                        {{ form.avatar }}
+                        {% if form.avatar.errors %}
+                            <div class="invalid-feedback d-block">{{ form.avatar.errors.as_text }}</div>
+                        {% endif %}
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100">Complete Profile</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
