@@ -1,41 +1,26 @@
 {
   "status": "done",
   "assets": {
-    "main-01bb5ed6a41c8db2a5d5.css": {
-      "name": "main-01bb5ed6a41c8db2a5d5.css",
-      "path": "C:\\Users\\murki\\PycharmProjects\\Task_14_DjangoGramm_Pretty_View\\static\\webpack_bundles\\main-01bb5ed6a41c8db2a5d5.css",
-      "publicPath": "/static/webpack_bundles/main-01bb5ed6a41c8db2a5d5.css"
+    "main-e3a6c52466d92a83e2ee.css": {
+      "name": "main-e3a6c52466d92a83e2ee.css",
+      "path": "C:\\Users\\murki\\PycharmProjects\\Task_14_DjangoGramm_Pretty_View\\static\\webpack_bundles\\main-e3a6c52466d92a83e2ee.css",
+      "publicPath": "/static/webpack_bundles/main-e3a6c52466d92a83e2ee.css"
     },
-    "main-01bb5ed6a41c8db2a5d5.js": {
-      "name": "main-01bb5ed6a41c8db2a5d5.js",
-      "path": "C:\\Users\\murki\\PycharmProjects\\Task_14_DjangoGramm_Pretty_View\\static\\webpack_bundles\\main-01bb5ed6a41c8db2a5d5.js",
-      "publicPath": "/static/webpack_bundles/main-01bb5ed6a41c8db2a5d5.js"
+    "main-e3a6c52466d92a83e2ee.js": {
+      "name": "main-e3a6c52466d92a83e2ee.js",
+      "path": "C:\\Users\\murki\\PycharmProjects\\Task_14_DjangoGramm_Pretty_View\\static\\webpack_bundles\\main-e3a6c52466d92a83e2ee.js",
+      "publicPath": "/static/webpack_bundles/main-e3a6c52466d92a83e2ee.js"
     },
-    "main-cc531144c127d125b731.css": {
-      "name": "main-cc531144c127d125b731.css",
-      "path": "C:\\Users\\murki\\PycharmProjects\\Task_14_DjangoGramm_Pretty_View\\static\\webpack_bundles\\main-cc531144c127d125b731.css",
-      "publicPath": "/static/webpack_bundles/main-cc531144c127d125b731.css"
-    },
-    "main-cc531144c127d125b731.js": {
-      "name": "main-cc531144c127d125b731.js",
-      "path": "C:\\Users\\murki\\PycharmProjects\\Task_14_DjangoGramm_Pretty_View\\static\\webpack_bundles\\main-cc531144c127d125b731.js",
-      "publicPath": "/static/webpack_bundles/main-cc531144c127d125b731.js"
-    },
-    "main-ec2a276118a858bf00b6.css": {
-      "name": "main-ec2a276118a858bf00b6.css",
-      "path": "C:\\Users\\murki\\PycharmProjects\\Task_14_DjangoGramm_Pretty_View\\static\\webpack_bundles\\main-ec2a276118a858bf00b6.css",
-      "publicPath": "/static/webpack_bundles/main-ec2a276118a858bf00b6.css"
-    },
-    "main-ec2a276118a858bf00b6.js": {
-      "name": "main-ec2a276118a858bf00b6.js",
-      "path": "C:\\Users\\murki\\PycharmProjects\\Task_14_DjangoGramm_Pretty_View\\static\\webpack_bundles\\main-ec2a276118a858bf00b6.js",
-      "publicPath": "/static/webpack_bundles/main-ec2a276118a858bf00b6.js"
+    "main-e3a6c52466d92a83e2ee.js.LICENSE.txt": {
+      "name": "main-e3a6c52466d92a83e2ee.js.LICENSE.txt",
+      "path": "C:\\Users\\murki\\PycharmProjects\\Task_14_DjangoGramm_Pretty_View\\static\\webpack_bundles\\main-e3a6c52466d92a83e2ee.js.LICENSE.txt",
+      "publicPath": "/static/webpack_bundles/main-e3a6c52466d92a83e2ee.js.LICENSE.txt"
     }
   },
   "chunks": {
     "main": [
-      "main-01bb5ed6a41c8db2a5d5.css",
-      "main-01bb5ed6a41c8db2a5d5.js"
+      "main-e3a6c52466d92a83e2ee.css",
+      "main-e3a6c52466d92a83e2ee.js"
     ]
   },
   "publicPath": "/static/webpack_bundles/"
